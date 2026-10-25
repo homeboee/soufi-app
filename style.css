@@ -1,0 +1,94 @@
+/* style.css — how the app LOOKS.
+   Change the colours here (":root") and the whole app updates. */
+
+:root {
+  --ink: #0a1417;        /* page background: night sky before dawn */
+  --teal: #134040;       /* soft glow at the top */
+  --gold: #e2b857;       /* lamp-light accent */
+  --gold-dim: rgba(226, 184, 87, 0.35);
+  --paper: #f1e8d2;      /* main text, like old parchment */
+  --sage: #94ada5;       /* quieter text */
+  --panel: rgba(255, 255, 255, 0.04);
+}
+
+* { box-sizing: border-box; margin: 0; -webkit-tap-highlight-color: transparent; }
+
+html { background: var(--ink); }
+
+body {
+  min-height: 100vh;
+  color: var(--paper);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background:
+    radial-gradient(120% 55% at 50% -8%, var(--teal), transparent 70%),
+    repeating-linear-gradient(45deg, rgba(226,184,87,.05) 0 1px, transparent 1px 30px),
+    repeating-linear-gradient(-45deg, rgba(226,184,87,.05) 0 1px, transparent 1px 30px),
+    var(--ink);
+  /* keep content clear of the phone's status and gesture bars */
+  padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px);
+}
+
+.screen { max-width: 480px; margin: 0 auto; padding: 36px 20px 40px; }
+
+/* ---------- Header ---------- */
+.head { text-align: center; margin-bottom: 32px; }
+
+.bismillah {
+  font-family: "Amiri", "Noto Naskh Arabic", "Droid Arabic Naskh", serif;
+  font-size: 1.35rem; color: var(--gold); line-height: 2;
+}
+.reciter-ar {
+  font-family: "Amiri", "Noto Naskh Arabic", "Droid Arabic Naskh", serif;
+  font-size: 2.3rem; line-height: 1.5; margin-top: 14px;
+}
+.reciter-en { color: var(--sage); font-size: 1rem; letter-spacing: .02em; }
+.prompt { margin-top: 26px; font-size: 1.05rem; }
+
+/* ---------- Style cards ---------- */
+.styles { display: grid; gap: 16px; }
+
+.card {
+  position: relative; display: block; width: 100%;
+  min-height: 132px; padding: 22px 18px;
+  text-align: center; color: inherit; font: inherit; cursor: pointer;
+  background: var(--panel);
+  border: 1px solid var(--gold-dim); border-radius: 18px;
+  /* a second, thinner frame inside the first, like a manuscript border */
+  box-shadow: inset 0 0 0 5px var(--ink), inset 0 0 0 6px var(--gold-dim);
+  transition: transform .15s ease, border-color .15s ease, background .15s ease;
+  animation: rise .5s ease both; animation-delay: calc(var(--i) * 90ms);
+}
+.card:active { transform: scale(.98); background: rgba(226,184,87,.1); }
+.card:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+.card.selected { border-color: var(--gold); background: rgba(226,184,87,.1); }
+
+.card-ar {
+  display: block; direction: rtl;
+  font-family: "Amiri", "Noto Naskh Arabic", "Droid Arabic Naskh", serif;
+  font-size: 1.9rem; line-height: 1.6; color: var(--paper);
+}
+.card-en { display: block; margin-top: 4px; font-size: 1.05rem; color: var(--paper); }
+.card-meta { display: block; margin-top: 10px; font-size: .9rem; color: var(--sage); }
+
+.badge {
+  position: absolute; top: 12px; inset-inline-end: 14px;
+  font-size: .75rem; color: var(--ink); background: var(--gold);
+  padding: 3px 10px; border-radius: 99px; font-weight: 600;
+}
+
+/* ---------- Message at the bottom ---------- */
+.toast {
+  position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  transform: translate(-50%, 20px); opacity: 0; pointer-events: none;
+  background: var(--paper); color: var(--ink); padding: 12px 18px;
+  border-radius: 12px; font-size: .95rem; max-width: 90%;
+  transition: opacity .25s ease, transform .25s ease;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } }
+
+/* people who turn animations off in Android settings get none */
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}

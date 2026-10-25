@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <!-- viewport-fit=cover lets the app use the full phone screen -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0a1417">
+  <title>Sheikh Abdul Rashid Soufi</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="screen">
+    <header class="head">
+      <p class="bismillah" lang="ar" dir="rtl">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</p>
+      <h1 class="reciter-ar" id="reciter-ar" lang="ar" dir="rtl"></h1>
+      <p class="reciter-en" id="reciter-en"></p>
+      <p class="prompt">Choose a recitation</p>
+    </header>
+
+    <!-- app.js fills this with the cards -->
+    <section class="styles" id="styles" aria-label="Recitation styles"></section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- order matters: data first, then the code that uses it -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
