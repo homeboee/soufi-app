@@ -7,6 +7,8 @@
 
 const homeEl = document.getElementById("home");
 const surahsEl = document.getElementById("surahs");
+const playerEl = document.getElementById("player");
+let listStyle = null; // the style whose surah list is open
 const listEl = document.getElementById("styles");
 const surahListEl = document.getElementById("surah-list");
 const searchEl = document.getElementById("search");
@@ -49,7 +51,7 @@ function renderSurahs(style) {
   document.getElementById("style-en").textContent = style.english;
   surahListEl.innerHTML = SURAHS.map(([ar, en], i) => `
     <li data-num="${i + 1}" data-key="${simple(en)}" data-ar="${ar}">
-      <button class="row" type="button" data-i="${i}">
+      <button class="row${i + 1 === playingNumber(style) ? " now" : ""}" type="button" data-i="${i}">
         <span class="num">${i + 1}</span>
         <span class="row-en">${en}</span>
         <span class="row-ar" lang="ar">${ar}</span>
@@ -63,8 +65,7 @@ function renderSurahs(style) {
 surahListEl.addEventListener("click", (event) => {
   const row = event.target.closest(".row");
   if (!row) return;
-  const [, en] = SURAHS[row.dataset.i];
-  showToast(`${en}: the player comes in the next step.`);
+  playSurah(listStyle, Number(row.dataset.i) + 1); // starts the audio, then opens the player
 });
 
 // Search: hide the rows that do not match what you typed.
@@ -83,13 +84,31 @@ searchEl.addEventListener("input", () => {
 });
 
 // ---------- The router ----------
-function route() {
-  const found = location.hash.match(/^#\/s\/(\d+)$/);
-  const style = found && STYLES.find((s) => s.id === Number(found[1]));
-  homeEl.hidden = Boolean(style);
-  surahsEl.hidden = !style;
-  if (style) renderSurahs(style);
+const screens = { home: homeEl, surahs: surahsEl, player: playerEl };
+const findStyle = (id) => STYLES.find((s) => s.id === Number(id));
+
+function show(name) { // show one screen, hide the others
+  Object.entries(screens).forEach(([key, node]) => { node.hidden = key !== name; });
   window.scrollTo(0, 0);
+}
+
+function route() {
+  const list = location.hash.match(/^#\/s\/(\d+)$/);        // #/s/258
+  const play = location.hash.match(/^#\/p\/(\d+)\/(\d+)$/);   // #/p/258/18
+  if (list && findStyle(list[1])) {
+    listStyle = findStyle(list[1]);
+    renderSurahs(listStyle);
+    show("surahs");
+    // jump to the surah that is playing, if there is one
+    const now = document.querySelector(".row.now");
+    if (now) now.scrollIntoView({ block: "center" });
+  } else if (play && findStyle(play[1]) && play[2] >= 1 && play[2] <= SURAHS.length) {
+    listStyle = findStyle(play[1]);
+    openPlayer(listStyle, Number(play[2]));
+    show("player");
+  } else {
+    show("home");
+  }
 }
 window.addEventListener("hashchange", route);
 

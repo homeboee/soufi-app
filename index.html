@@ -33,11 +33,35 @@
     <p class="empty" id="empty" hidden>No surah found</p>
   </main>
 
+  <!-- SCREEN 3: the player -->
+  <main class="screen" id="player" hidden>
+    <div class="bar">
+      <a class="back" id="player-back" href="#/" aria-label="Back to surah list">‹</a>
+      <div class="bar-title"><p class="bar-en" id="p-style"></p></div>
+    </div>
+    <div class="art" id="art" aria-hidden="true"><span class="art-num" id="p-num"></span></div>
+    <h2 class="p-ar" id="p-ar" lang="ar" dir="rtl"></h2>
+    <p class="p-en" id="p-en"></p>
+    <p class="p-status" id="p-status" role="status" aria-live="polite"></p>
+    <div class="seek">
+      <input id="seek" type="range" min="0" max="1000" value="0" step="1" aria-label="Seek">
+      <div class="times"><span id="t-cur">0:00</span><span id="t-dur">--:--</span></div>
+    </div>
+    <div class="controls">
+      <button class="ctl" id="btn-prev" type="button" aria-label="Previous surah"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6h2v12H6zM20 6v12L9.5 12z"/></svg></button>
+      <button class="ctl" id="btn-back10" type="button" aria-label="Back 10 seconds"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5V2L7 6l5 4V7a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z"/><text x="12" y="16" text-anchor="middle" font-size="7" font-weight="700">10</text></svg></button>
+      <button class="ctl play" id="btn-play" type="button" data-state="paused" aria-label="Play"><span class="i-play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span><span class="i-pause"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></span></button>
+      <button class="ctl" id="btn-fwd10" type="button" aria-label="Forward 10 seconds"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5V2l5 4-5 4V7a6 6 0 1 0 6 6h2a8 8 0 1 1-8-8z"/><text x="12" y="16" text-anchor="middle" font-size="7" font-weight="700">10</text></svg></button>
+      <button class="ctl" id="btn-next" type="button" aria-label="Next surah"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 6h2v12h-2zM4 6v12l10.5-6z"/></svg></button>
+    </div>
+  </main>
+
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <!-- order matters: data first, then the code that uses it -->
   <script src="data.js"></script>
   <script src="surahs.js"></script>
+  <script src="player.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
