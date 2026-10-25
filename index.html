@@ -2,29 +2,42 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <!-- viewport-fit=cover lets the app use the full phone screen -->
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#0a1417">
   <title>Sheikh Abdul Rashid Soufi</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="screen">
+  <!-- SCREEN 1: choose a recitation style -->
+  <main class="screen" id="home">
     <header class="head">
       <p class="bismillah" lang="ar" dir="rtl">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</p>
       <h1 class="reciter-ar" id="reciter-ar" lang="ar" dir="rtl"></h1>
       <p class="reciter-en" id="reciter-en"></p>
       <p class="prompt">Choose a recitation</p>
     </header>
-
-    <!-- app.js fills this with the cards -->
     <section class="styles" id="styles" aria-label="Recitation styles"></section>
+  </main>
+
+  <!-- SCREEN 2: the 114 surahs. "hidden" keeps it out of sight until needed -->
+  <main class="screen" id="surahs" hidden>
+    <div class="bar">
+      <a class="back" href="#/" aria-label="Back to recitations">‹</a>
+      <div class="bar-title">
+        <h2 class="bar-ar" id="style-ar" lang="ar" dir="rtl"></h2>
+        <p class="bar-en" id="style-en"></p>
+      </div>
+    </div>
+    <input class="search" id="search" type="search" placeholder="Search by name or number" aria-label="Search surahs" autocomplete="off">
+    <ol class="surah-list" id="surah-list"></ol>
+    <p class="empty" id="empty" hidden>No surah found</p>
   </main>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <!-- order matters: data first, then the code that uses it -->
   <script src="data.js"></script>
+  <script src="surahs.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

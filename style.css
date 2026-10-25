@@ -92,3 +92,50 @@ body {
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }
 }
+
+/* ---------- Surah list screen ---------- */
+.bar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  display: flex; align-items: center; gap: 12px; padding: 10px 0;
+  background: rgba(10, 20, 23, 0.92); backdrop-filter: blur(8px);
+}
+.back {
+  display: grid; place-items: center; flex: none; width: 48px; height: 48px;
+  border: 1px solid var(--gold-dim); border-radius: 50%;
+  color: var(--gold); font-size: 2rem; line-height: 1; text-decoration: none;
+}
+.back:active { background: rgba(226, 184, 87, 0.12); }
+.back:focus-visible, .search:focus-visible, .row:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+.bar-title { flex: 1; text-align: center; padding-inline-end: 60px; /* balances the back button */ }
+.bar-ar { font-family: "Amiri", "Noto Naskh Arabic", "Droid Arabic Naskh", serif; font-size: 1.6rem; line-height: 1.5; font-weight: 400; }
+.bar-en { color: var(--sage); font-size: .9rem; }
+
+.search {
+  width: 100%; margin: 8px 0 16px; padding: 14px 16px; font: inherit; color: var(--paper);
+  background: var(--panel); border: 1px solid var(--gold-dim); border-radius: 14px;
+}
+.search::placeholder { color: var(--sage); }
+
+.surah-list { list-style: none; padding: 0; display: grid; gap: 8px; }
+.surah-list li[hidden] { display: none; }
+.row {
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 14px;
+  width: 100%; min-height: 64px; padding: 8px 16px 8px 10px; text-align: left;
+  font: inherit; color: inherit; cursor: pointer;
+  background: var(--panel); border: 1px solid rgba(226, 184, 87, 0.15); border-radius: 14px;
+}
+.row:active { background: rgba(226, 184, 87, 0.12); }
+.num {
+  position: relative; display: grid; place-items: center; width: 44px; height: 44px;
+  color: var(--gold); font-size: .95rem; font-weight: 600;
+}
+.num::before { /* the gold diamond behind the number */
+  content: ""; position: absolute; inset: 8px; border: 1px solid var(--gold);
+  border-radius: 4px; transform: rotate(45deg);
+}
+.row-en { font-size: 1.05rem; }
+.row-ar {
+  direction: rtl; font-size: 1.55rem; line-height: 1.5;
+  font-family: "Amiri", "Noto Naskh Arabic", "Droid Arabic Naskh", serif;
+}
+.empty { text-align: center; color: var(--sage); padding: 32px 0; }
