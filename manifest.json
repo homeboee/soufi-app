@@ -1,0 +1,18 @@
+{
+  "id": "./",
+  "name": "Sheikh Abdul Rashid Soufi",
+  "short_name": "Soufi",
+  "description": "Listen to the recitation of Sheikh Abdul Rashid Soufi, online or offline.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "lang": "en",
+  "background_color": "#0a1417",
+  "theme_color": "#0a1417",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

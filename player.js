@@ -67,17 +67,34 @@ function render() {
 }
 
 // ---------- loading and playing ----------
+let blobUrl = null; // address of a saved copy that is playing (released when we move on)
+let loadToken = 0;  // stops an old, slow load from overriding a newer tap
+
+// Decide WHERE the sound comes from: the saved copy on the phone, or the internet.
+function setSource(style, n, autoplay) {
+  const token = ++loadToken;
+  Downloads.ready.then(async () => {
+    const saved = Downloads.isSaved(style.id, n) ? await Downloads.getUrl(style.id, n) : null;
+    if (token !== loadToken) { if (saved) URL.revokeObjectURL(saved); return; } // you tapped something else meanwhile
+    if (blobUrl) URL.revokeObjectURL(blobUrl);
+    blobUrl = saved;
+    audio.src = saved || surahUrl(style, n);
+    if (autoplay) audio.play().catch(() => {});
+  });
+}
+
 function loadSurah(style, n, autoplay) {
   const same = nowStyle && nowStyle.id === style.id && nowNum === n;
   if (!same) {
     nowStyle = style; nowNum = n;
-    audio.src = surahUrl(style, n);
+    setSource(style, n, autoplay);
     el.seek.value = 0; setFill(0);
     el.cur.textContent = "0:00"; el.dur.textContent = "--:--";
     setStatus(autoplay ? "Loading…" : "");
     updateLockScreen();
+  } else if (autoplay && audio.paused) {
+    audio.play().catch(() => {}); // errors are shown by the "error" event below
   }
-  if (autoplay && (!same || audio.paused)) audio.play().catch(() => {}); // errors are shown by the "error" event below
   render();
 }
 
@@ -141,8 +158,9 @@ audio.addEventListener("ended", () => {
   if (nowNum < SURAHS.length) goTo(nowNum + 1); // keep going to the next surah
   else setStatus("The recitation has finished.");
 });
-audio.addEventListener("error", () =>
-  setStatus("Could not load this recitation. Check your internet, then tap play."));
+audio.addEventListener("error", () => setStatus(navigator.onLine
+  ? "Could not load this recitation. Check your internet, then tap play."
+  : "You are offline. Download this surah first to play it without internet."));
 
 // ---------- phone lock screen and notification controls ----------
 const session = navigator.mediaSession;
@@ -154,6 +172,7 @@ function updateLockScreen() {
     title: nowNum + ". " + en + " – " + ar,
     artist: RECITER.english,
     album: nowStyle.english,
+    artwork: [{ src: "icon-512.png", sizes: "512x512", type: "image/png" }],
   });
 }
 

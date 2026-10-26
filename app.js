@@ -38,7 +38,11 @@ function makeCard(style, index) {
     <span class="card-meta">${style.type}, ${style.surahs} surahs</span>
   `;
   // Changing the address is what "opens" the next screen.
-  card.addEventListener("click", () => { location.hash = "#/s/" + style.id; });
+  // A fully saved style opens at once; otherwise the offline pop-up appears first.
+  card.addEventListener("click", () => Downloads.ready.then(() => {
+    if (Downloads.isComplete(style)) location.hash = "#/s/" + style.id;
+    else Dialog.askStyle(style);
+  }));
   return card;
 }
 
@@ -51,12 +55,13 @@ function renderSurahs(style) {
   document.getElementById("style-en").textContent = style.english;
   surahListEl.innerHTML = SURAHS.map(([ar, en], i) => `
     <li data-num="${i + 1}" data-key="${simple(en)}" data-ar="${ar}">
-      <button class="row${i + 1 === playingNumber(style) ? " now" : ""}" type="button" data-i="${i}">
+      <button class="row${i + 1 === playingNumber(style) ? " now" : ""}${Downloads.isSaved(style.id, i + 1) ? " saved" : ""}" type="button" data-i="${i}">
         <span class="num">${i + 1}</span>
         <span class="row-en">${en}</span>
         <span class="row-ar" lang="ar">${ar}</span>
       </button>
     </li>`).join("");
+  paintSavedInfo(style);
   searchEl.value = "";
   emptyEl.hidden = true;
 }
@@ -65,7 +70,11 @@ function renderSurahs(style) {
 surahListEl.addEventListener("click", (event) => {
   const row = event.target.closest(".row");
   if (!row) return;
-  playSurah(listStyle, Number(row.dataset.i) + 1); // starts the audio, then opens the player
+  const n = Number(row.dataset.i) + 1;
+  // Saved surahs (or a fully saved style) play at once; any other surah
+  // shows the same pop-up as the recitation styles.
+  if (Downloads.isSaved(listStyle.id, n) || Downloads.isComplete(listStyle)) playSurah(listStyle, n);
+  else Dialog.askSurah(listStyle, n);
 });
 
 // Search: hide the rows that do not match what you typed.
@@ -117,3 +126,27 @@ document.getElementById("reciter-ar").textContent = RECITER.arabic;
 document.getElementById("reciter-en").textContent = RECITER.english;
 STYLES.forEach((style, i) => listEl.appendChild(makeCard(style, i)));
 route();
+
+// ---------- Saved-offline summary under the search box ----------
+function paintSavedInfo(style) {
+  const count = Downloads.savedCount(style.id);
+  document.getElementById("saved-info").hidden = count === 0;
+  document.getElementById("saved-text").textContent =
+    `${count} of ${style.surahs} saved on this phone (${Math.round(Downloads.savedBytes(style.id) / 1048576)} MB)`;
+}
+
+document.getElementById("saved-remove").addEventListener("click", () => {
+  if (confirm(`Remove the saved ${listStyle.english} recitations from this phone?`)) {
+    Downloads.removeStyle(listStyle).then(() => renderSurahs(listStyle));
+  }
+});
+
+// If the list opened before the saved files were read, redraw it once they are.
+Downloads.ready.then(() => { if (!surahsEl.hidden && listStyle) renderSurahs(listStyle); });
+
+// ---------- Make the app installable and work offline ----------
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch((e) => console.error("Service worker failed", e));
+  });
+}

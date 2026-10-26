@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#0a1417">
   <title>Sheikh Abdul Rashid Soufi</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -29,6 +32,7 @@
       </div>
     </div>
     <input class="search" id="search" type="search" placeholder="Search by name or number" aria-label="Search surahs" autocomplete="off">
+    <p class="saved-info" id="saved-info" hidden><span id="saved-text"></span> <button class="link" id="saved-remove" type="button">Remove</button></p>
     <ol class="surah-list" id="surah-list"></ol>
     <p class="empty" id="empty" hidden>No surah found</p>
   </main>
@@ -56,11 +60,27 @@
     </div>
   </main>
 
+  <!-- The offline pop-up (opened by dialogs.js) -->
+  <dialog class="dlg" id="dl-dialog" aria-labelledby="dl-title">
+    <h2 class="dlg-title" id="dl-title"></h2>
+    <p class="dlg-sub" id="dl-sub"></p>
+    <p class="dlg-text" id="dl-text"></p>
+    <p class="dlg-size" id="dl-size"></p>
+    <div class="meter" id="dl-meter" role="progressbar" aria-label="Download progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" hidden><div class="meter-fill" id="dl-fill"></div></div>
+    <p class="dlg-status" id="dl-status" role="status" hidden></p>
+    <div class="dlg-actions">
+      <button class="btn primary" id="dl-go" type="button">Download</button>
+      <button class="btn" id="dl-no" type="button">Cancel</button>
+    </div>
+  </dialog>
+
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <!-- order matters: data first, then the code that uses it -->
   <script src="data.js"></script>
   <script src="surahs.js"></script>
+  <script src="downloads.js"></script>
+  <script src="dialogs.js"></script>
   <script src="player.js"></script>
   <script src="app.js"></script>
 </body>
