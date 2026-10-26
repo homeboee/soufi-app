@@ -196,6 +196,7 @@ body {
 
 /* ---------- The offline pop-up ---------- */
 .dlg {
+  margin: auto; /* centres the pop-up (the page-wide reset removed this) */
   width: min(92vw, 400px); padding: 28px 24px 24px; text-align: center; color: var(--paper);
   background: #0f1d20; border: 1px solid var(--gold-dim); border-radius: 20px;
   box-shadow: inset 0 0 0 5px #0f1d20, inset 0 0 0 6px var(--gold-dim), 0 20px 60px rgba(0, 0, 0, 0.6);

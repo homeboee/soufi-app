@@ -146,6 +146,13 @@ Downloads.ready.then(() => { if (!surahsEl.hidden && listStyle) renderSurahs(lis
 
 // ---------- Make the app installable and work offline ----------
 if ("serviceWorker" in navigator) {
+  // When a NEW version of the app takes over, reload once so you see it,
+  // but only if nothing is playing and no pop-up is open.
+  const hadHelper = Boolean(navigator.serviceWorker.controller);
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    const idle = audio.paused && !document.getElementById("dl-dialog").open;
+    if (hadHelper && idle) location.reload();
+  });
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("sw.js").catch((e) => console.error("Service worker failed", e));
   });

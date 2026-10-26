@@ -3,7 +3,7 @@
 // works with no internet. (Audio is NOT handled here; downloads.js does that.)
 // When you ADD or RENAME a file, add it to FILES and change VERSION.
 
-const VERSION = "2";
+const VERSION = "3";
 const CACHE = "soufi-shell-" + VERSION;
 const FILES = [
   "./", "index.html", "style.css", "data.js", "surahs.js", "downloads.js", "dialogs.js",
